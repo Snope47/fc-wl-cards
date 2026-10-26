@@ -2,8 +2,13 @@ name: Karten aktualisieren
 
 on:
   schedule:
-    # Täglich 04:17 UTC (neue Karten erscheinen meist am Abend vorher).
-    - cron: '17 4 * * *'
+    # Täglich 19:20 und 20:00 deutscher Zeit. GitHub rechnet in UTC, daher
+    # beide Varianten (Sommer- und Winterzeit); der Job prüft unten, welche
+    # gerade gilt, und läuft nur dann.
+    - cron: '20 17 * * *' # 19:20 Sommerzeit
+    - cron: '20 18 * * *' # 19:20 Winterzeit
+    - cron: '0 18 * * *' # 20:00 Sommerzeit
+    - cron: '0 19 * * *' # 20:00 Winterzeit
   workflow_dispatch:
     inputs:
       full:
@@ -28,14 +33,35 @@ jobs:
       name: github-pages
       url: ${{ steps.deploy.outputs.page_url }}
     steps:
+      - name: Zeit prüfen (Europe/Berlin)
+        id: slot
+        run: |
+          RUN=true
+          SLOT=""
+          CRON="${{ github.event.schedule }}"
+          if [ -n "$CRON" ]; then
+            OFFSET=$(TZ=Europe/Berlin date +%z)   # +0200 Sommer, +0100 Winter
+            case "$CRON|$OFFSET" in
+              "20 17 * * *|+0200"|"20 18 * * *|+0100") SLOT=1920 ;;
+              "0 18 * * *|+0200"|"0 19 * * *|+0100") SLOT=2000 ;;
+              *) RUN=false ;;
+            esac
+          fi
+          echo "run=$RUN" >> "$GITHUB_OUTPUT"
+          echo "slot=$SLOT" >> "$GITHUB_OUTPUT"
+          echo "Zeitplan: '$CRON' · Berlin $(TZ=Europe/Berlin date '+%H:%M %z') · läuft: $RUN"
+
       - uses: actions/checkout@v4
+        if: steps.slot.outputs.run == 'true'
 
       - uses: dart-lang/setup-dart@v1
+        if: steps.slot.outputs.run == 'true'
         with:
           sdk: stable
 
       # Stand vom letzten Lauf (Karten + Bilder), damit nur Neues geladen wird.
       - name: Letzten Stand laden
+        if: steps.slot.outputs.run == 'true'
         uses: actions/cache/restore@v4
         with:
           path: out
@@ -43,28 +69,33 @@ jobs:
           restore-keys: cards-
 
       - name: Abhängigkeiten
+        if: steps.slot.outputs.run == 'true'
         working-directory: tools/card_sync
         run: dart pub get
 
       - name: Karten holen
+        if: steps.slot.outputs.run == 'true'
         working-directory: tools/card_sync
         run: |
           FULL=""
-          # Sonntags oder auf Wunsch alles abgleichen (Wertungsänderungen).
-          if [ "${{ inputs.full }}" = "true" ] || [ "$(date -u +%u)" = "7" ]; then FULL="--full"; fi
+          # Sonntags (nur 19:20) oder auf Wunsch alles abgleichen (Wertungsänderungen).
+          if [ "${{ inputs.full }}" = "true" ]; then FULL="--full"; fi
+          if [ "${{ steps.slot.outputs.slot }}" = "1920" ] && [ "$(TZ=Europe/Berlin date +%u)" = "7" ]; then FULL="--full"; fi
           dart run bin/card_sync.dart --out ../../out $FULL
 
       - name: Stand merken
-        if: always() && hashFiles('out/cards.json') != ''
+        if: always() && steps.slot.outputs.run == 'true' && hashFiles('out/cards.json') != ''
         uses: actions/cache/save@v4
         with:
           path: out
           key: cards-${{ github.run_id }}
 
       - uses: actions/upload-pages-artifact@v3
+        if: steps.slot.outputs.run == 'true'
         with:
           path: out
 
       - name: Veröffentlichen
+        if: steps.slot.outputs.run == 'true'
         id: deploy
         uses: actions/deploy-pages@v4
