@@ -81,7 +81,7 @@ jobs:
           # Sonntags (nur 19:20) oder auf Wunsch alles abgleichen (Wertungsänderungen).
           if [ "${{ inputs.full }}" = "true" ]; then FULL="--full"; fi
           if [ "${{ steps.slot.outputs.slot }}" = "1920" ] && [ "$(TZ=Europe/Berlin date +%u)" = "7" ]; then FULL="--full"; fi
-          dart run bin/card_sync.dart --out ../../out $FULL
+          dart run bin/card_sync.dart --out ../../out --image-minutes 150 $FULL
 
       - name: Stand merken
         if: always() && steps.slot.outputs.run == 'true' && hashFiles('out/cards.json') != ''

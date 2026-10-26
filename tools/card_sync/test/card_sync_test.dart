@@ -4,20 +4,24 @@ import 'dart:io';
 import 'package:card_sync/card_sync.dart';
 import 'package:test/test.dart';
 
-PlayerCard card(int id, {int rating = 80, String created = '2026-10-01T00:00:00Z', String img = 'x/1.aaaaaaaa11.webp'}) =>
-    PlayerCard(
-      id: id,
-      basePlayerId: id,
-      name: 'Spieler $id',
-      firstName: 'Vor',
-      lastName: 'Nach',
-      rating: rating,
-      position: 'ST',
-      altPositions: const [],
-      version: 'Rare',
-      createdAt: DateTime.parse(created),
-      sourceImagePath: img,
-    );
+PlayerCard card(
+  int id, {
+  int rating = 80,
+  String created = '2026-10-01T00:00:00Z',
+  String img = 'x/1.aaaaaaaa11.webp',
+}) => PlayerCard(
+  id: id,
+  basePlayerId: id,
+  name: 'Spieler $id',
+  firstName: 'Vor',
+  lastName: 'Nach',
+  rating: rating,
+  position: 'ST',
+  altPositions: const [],
+  version: 'Rare',
+  createdAt: DateTime.parse(created),
+  sourceImagePath: img,
+);
 
 void main() {
   group('fut.gg-Seite parsen', () {
@@ -58,10 +62,7 @@ void main() {
 
   group('mergeCards', () {
     test('zählt neue und geänderte Karten, neue Daten gewinnen', () {
-      final result = mergeCards(
-        [card(1, rating: 80), card(2)],
-        [card(1, rating: 82), card(2), card(3)],
-      );
+      final result = mergeCards([card(1, rating: 80), card(2)], [card(1, rating: 82), card(2), card(3)]);
       expect(result.added, 1);
       expect(result.changed, 1);
       expect(result.cards.firstWhere((c) => c.id == 1).rating, 82);

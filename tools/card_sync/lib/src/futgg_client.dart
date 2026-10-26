@@ -70,7 +70,10 @@ class FutggClient {
   Future<http.Response> _get(Uri uri, {required String accept, bool throttle = true}) async {
     for (var attempt = 1; ; attempt++) {
       if (throttle) await _waitForSlot();
-      final res = await _http.get(uri, headers: {'User-Agent': userAgent, 'Accept': accept});
+      // Ohne Zeitlimit kann eine hängende Verbindung den ganzen Lauf blockieren.
+      final res = await _http
+          .get(uri, headers: {'User-Agent': userAgent, 'Accept': accept})
+          .timeout(const Duration(seconds: 20));
       if (res.statusCode == 200) return res;
       final retryable = res.statusCode == 429 || res.statusCode >= 500;
       if (!retryable || attempt >= 4) {
