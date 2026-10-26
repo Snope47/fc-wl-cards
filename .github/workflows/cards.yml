@@ -1,0 +1,69 @@
+name: Karten aktualisieren
+
+on:
+  schedule:
+    # Täglich 04:17 UTC (neue Karten erscheinen meist am Abend vorher).
+    - cron: '17 4 * * *'
+  workflow_dispatch:
+    inputs:
+      full:
+        description: 'Kompletter Abgleich (alle Karten neu prüfen)'
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 340
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dart-lang/setup-dart@v1
+        with:
+          sdk: stable
+
+      # Stand vom letzten Lauf (Karten + Bilder), damit nur Neues geladen wird.
+      - name: Letzten Stand laden
+        uses: actions/cache/restore@v4
+        with:
+          path: out
+          key: cards-${{ github.run_id }}
+          restore-keys: cards-
+
+      - name: Abhängigkeiten
+        working-directory: tools/card_sync
+        run: dart pub get
+
+      - name: Karten holen
+        run: |
+          FULL=""
+          # Sonntags oder auf Wunsch alles abgleichen (Wertungsänderungen).
+          if [ "${{ inputs.full }}" = "true" ] || [ "$(date -u +%u)" = "7" ]; then FULL="--full"; fi
+          dart run tools/card_sync/bin/card_sync.dart --out out $FULL
+
+      - name: Stand merken
+        if: always() && hashFiles('out/cards.json') != ''
+        uses: actions/cache/save@v4
+        with:
+          path: out
+          key: cards-${{ github.run_id }}
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: out
+
+      - name: Veröffentlichen
+        id: deploy
+        uses: actions/deploy-pages@v4

@@ -1,0 +1,86 @@
+{
+ "data": [
+  {
+   "id": 169361,
+   "eaId": 37576,
+   "basePlayerEaId": 37576,
+   "commonName": "Ronaldo",
+   "cardName": "Ronaldo",
+   "firstName": "Ronaldo Luís",
+   "lastName": "Nazário de Lima",
+   "nickname": "Ronaldo",
+   "overall": 94,
+   "position": "ST",
+   "alternativePositions": [],
+   "rarityName": "Base Icon",
+   "createdAt": "2026-09-15T20:09:32.892865Z",
+   "simpleCardImagePath": "2027/player-item-simple-card/27-37576.d3c2a77d59b58908883728ff4ae58ee1de673295e3ee391bef1180841aed4e9f.webp",
+   "simpleCardImageUrl": "https://game-assets.fut.gg/cdn-cgi/image/quality=85,format=auto,width=300/2027/player-item-simple-card/27-37576.d3c2a77d59b58908883728ff4ae58ee1de673295e3ee391bef1180841aed4e9f.webp",
+   "evolutionId": null
+  },
+  {
+   "id": 169369,
+   "eaId": 275243,
+   "basePlayerEaId": 275243,
+   "commonName": "Mia Hamm",
+   "cardName": "Hamm",
+   "firstName": "Mia",
+   "lastName": "Hamm",
+   "nickname": null,
+   "overall": 93,
+   "position": "ST",
+   "alternativePositions": [
+    "CAM",
+    "RW"
+   ],
+   "rarityName": "Base Icon",
+   "createdAt": "2026-09-15T20:09:41.935552Z",
+   "simpleCardImagePath": "2027/player-item-simple-card/27-275243.e3049d0274327514140ad8598c3300e15b96ce409f2a0ed914ca9d6e90c52cc0.webp",
+   "simpleCardImageUrl": "https://game-assets.fut.gg/cdn-cgi/image/quality=85,format=auto,width=300/2027/player-item-simple-card/27-275243.e3049d0274327514140ad8598c3300e15b96ce409f2a0ed914ca9d6e90c52cc0.webp",
+   "evolutionId": null
+  },
+  {
+   "id": 144707,
+   "eaId": 231747,
+   "basePlayerEaId": 231747,
+   "commonName": "Kylian Mbappé",
+   "cardName": "Mbappé",
+   "firstName": "Kylian",
+   "lastName": "Mbappé",
+   "nickname": null,
+   "overall": 91,
+   "position": "ST",
+   "alternativePositions": [
+    "LW"
+   ],
+   "rarityName": "Rare",
+   "createdAt": "2026-08-18T14:17:18.678651Z",
+   "simpleCardImagePath": "2027/player-item-simple-card/27-231747.8ca49e24fabf36d8b389831f0afdcd3d07fc250e6a5ed36031f3225af7f9c4bc.webp",
+   "simpleCardImageUrl": "https://game-assets.fut.gg/cdn-cgi/image/quality=85,format=auto,width=300/2027/player-item-simple-card/27-231747.8ca49e24fabf36d8b389831f0afdcd3d07fc250e6a5ed36031f3225af7f9c4bc.webp",
+   "evolutionId": null
+  },
+  {
+   "id": 170878,
+   "eaId": 50563395,
+   "basePlayerEaId": 231747,
+   "commonName": "Kylian Mbappé",
+   "cardName": "Mbappé",
+   "firstName": "Kylian",
+   "lastName": "Mbappé",
+   "nickname": null,
+   "overall": 91,
+   "position": "ST",
+   "alternativePositions": [
+    "LW"
+   ],
+   "rarityName": "Destined for Glory",
+   "createdAt": "2026-09-25T17:00:38.366551Z",
+   "simpleCardImagePath": "2027/player-item-simple-card/27-50563395.e43a47410a46def0c1079562f83aa44dc68265bad01677802d69e8a667555404.webp",
+   "simpleCardImageUrl": "https://game-assets.fut.gg/cdn-cgi/image/quality=85,format=auto,width=300/2027/player-item-simple-card/27-50563395.e43a47410a46def0c1079562f83aa44dc68265bad01677802d69e8a667555404.webp",
+   "evolutionId": null
+  }
+ ],
+ "next": 2,
+ "currentPage": 1,
+ "total": 10000
+}
