@@ -47,11 +47,12 @@ jobs:
         run: dart pub get
 
       - name: Karten holen
+        working-directory: tools/card_sync
         run: |
           FULL=""
           # Sonntags oder auf Wunsch alles abgleichen (Wertungsänderungen).
           if [ "${{ inputs.full }}" = "true" ] || [ "$(date -u +%u)" = "7" ]; then FULL="--full"; fi
-          dart run tools/card_sync/bin/card_sync.dart --out out $FULL
+          dart run bin/card_sync.dart --out ../../out $FULL
 
       - name: Stand merken
         if: always() && hashFiles('out/cards.json') != ''
